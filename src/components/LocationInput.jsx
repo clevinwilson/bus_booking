@@ -5,6 +5,7 @@ function LocationInput({name, initialValues, setInitialValues, cities }) {
     const [query, setQuery] = useState([]);
     const [apiQuery, setApiQuery] = useState([]);
 
+    //filtering the cities based on user input
     useEffect(() => {
         const timeOutId = setTimeout(() => {
             let filteredData = cities.filter((city) => {
@@ -22,7 +23,6 @@ function LocationInput({name, initialValues, setInitialValues, cities }) {
     //updating the query and formik initialValues
     const handleOnChange = (event) => {
         setQuery(event.target.value);
-        
         if (name =='sourceCity'){
             setInitialValues({ ...initialValues, sourceCity: event.target.value })
         }else{
@@ -38,8 +38,7 @@ function LocationInput({name, initialValues, setInitialValues, cities }) {
                 onChange={handleOnChange}
                 autoComplete="off"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="From" />
-
-
+                
             <div className='absolute grid grid-cols-1 w-full shadow-2xl bg-white rounded-sm max-h-80 overflow-y-auto'>
                 {
                     apiQuery.map((city, index) => {

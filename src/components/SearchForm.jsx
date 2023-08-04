@@ -1,11 +1,13 @@
 import { ErrorMessage, Formik, Form, Field } from 'formik';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { getCityList, searchBus } from '../services/userApi';
+import { getCityList } from '../services/userApi';
 import LocationInput from './LocationInput';
+import { RootContext } from '../store/RootContext';
 
-function SearchForm() {
+function SearchForm({ getBusList }) {
     const [cities, setCities] = useState([]);
+    const { setRootDetails } = useContext(RootContext);
 
     const [initialValues, setInitialValues] = useState({
         sourceCity: '',
@@ -22,7 +24,7 @@ function SearchForm() {
         getCityList()
             .then((response) => {
                 console.log(response);
-                setCities(response.data)
+                setCities(response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -46,25 +48,16 @@ function SearchForm() {
                 today.setHours(0, 0, 0, 0); // Set time to midnight for comparison
                 return value > today;
             }),
-
     });
 
 
 
     //submiting the form data
     const onSubmit = (values) => {
-        console.log(values);
-
-        searchBus(values)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-        // userSignup(values).then((response) => {
-        //     console.log(response);
-        // })
+        //setting the root details to context
+        setRootDetails(values);
+        //seting bus details in state
+        getBusList(values);
     }
 
 
@@ -76,12 +69,10 @@ function SearchForm() {
                 validationSchema={validate}
                 enableReinitialize={true}
                 onSubmit={onSubmit}>
-
                 <Form className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-8 lg:gap-3 lg:max-w-4xl max-w lg:shadow-2xl p-6 rounded-md border-spacing-2" >
 
                     <div>
                         <label htmlFor='from' className="block mb-2 text-sm font-medium text-gray-900 ">From</label>
-
                         <LocationInput name={'sourceCity'} initialValues={initialValues} setInitialValues={setFormikValues} cities={cities} />
                     </div>
 
