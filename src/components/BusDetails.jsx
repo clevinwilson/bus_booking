@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { RootContext } from '../store/RootContext';
 import { blockSeat, getSeatLayout } from '../services/userApi';
+import ListSeats from './ListSeats';
 
 function BusDetails() {
   const { rootDetails } = useContext(RootContext);
@@ -51,7 +52,7 @@ function BusDetails() {
 
   const lowerBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 0);
   const upperBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 1);
-  
+
 
   //block seat
   const handleSubmit = (e) => {
@@ -78,20 +79,7 @@ function BusDetails() {
         {lowerBerthSeats?.length ?
           <div className='mt-4'>
             <h1>Lower Deck</h1>
-            <div className='grid grid-cols-5 mt-10 gap-4 justify-center items-center'>
-              {
-                lowerBerthSeats.map((seat, index) => {
-                  return (
-                    <div onClick={(e) => {
-                      updateBlockedSeats({ checked: e.target.checked, id: seat.id, fare: seat.fare, totalFareWithTaxes: seat.totalFareWithTaxes, primary: seat.primary, ac: seat.ac, sleeper: seat.sleeper })
-                    }} key={index} className="flex items-center mb-4">
-                      <input id="default-checkbox" type="checkbox" defaultValue className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                      <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{seat.id} : {`₹ ${seat.fare}`} :{seat.width == 1 && seat.length == 2 ? "Horizontal " : seat.width == 2 && seat.length == 1 ? "Vertical " :""}</label>
-                    </div>
-                  )
-                })
-              }
-            </div>
+            <ListSeats seats={lowerBerthSeats} updateBlockedSeats={updateBlockedSeats}/>
           </div>
           :""}
         
@@ -99,20 +87,8 @@ function BusDetails() {
         {upperBerthSeats?.length ?
           <div className='mt-4'>
             <h1>Upper Deck</h1>
-            <div className='grid grid-cols-5 mt-10 gap-4 justify-center items-center'>
-              {
-                upperBerthSeats.map((seat, index) => {
-                  return (
-                    <div onClick={(e) => {
-                      updateBlockedSeats({ checked: e.target.checked, id: seat.id, fare: seat.fare, totalFareWithTaxes: seat.totalFareWithTaxes, primary: seat.primary, ac: seat.ac, sleeper: seat.sleeper })
-                    }} key={index} className="flex items-center mb-4">
-                      <input id="default-checkbox" type="checkbox" defaultValue className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                      <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{seat.id} : {`₹ ${seat.fare}`} :{seat.width == 1 && seat.length == 2 ? "Horizontal " : seat.width == 2 && seat.length == 1 ? "Vertical " : ""}</label>
-                    </div>
-                  )
-                })
-              }
-            </div>
+            <ListSeats seats={upperBerthSeats} updateBlockedSeats={updateBlockedSeats} />
+
           </div> : ""}
 
         <div onClick={() => {
