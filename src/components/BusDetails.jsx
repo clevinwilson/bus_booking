@@ -8,8 +8,11 @@ function BusDetails() {
   const [busDetails, setBusDetails] = useState([]);
   const [blockedSeats, setblockedSeats] = useState([]);
 
-  function updateBlockedSeats({ checked, id, fare, totalFareWithTaxes, primary, ac, sleeper }) {
+  //updating the state with seat details
+  const updateBlockedSeats=({ checked, id, fare, totalFareWithTaxes, primary, ac, sleeper })=> {
+    console.log('haaa');
     if (checked) {
+      console.log('chee');
       setblockedSeats([...blockedSeats, {
         age: "26",
         name: "Arti",
@@ -39,10 +42,10 @@ function BusDetails() {
     }
   }
 
+  //fetching the seatlayout details
   useEffect(() => {
     getSeatLayout(rootDetails)
       .then((response) => {
-        console.log(response.data);
         setBusDetails(response.data)
       })
       .catch((err) => {
@@ -50,6 +53,7 @@ function BusDetails() {
       })
   }, [rootDetails])
 
+  //filtering the lower berth upper berth seats
   const lowerBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 0);
   const upperBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 1);
 
@@ -88,7 +92,6 @@ function BusDetails() {
           <div className='mt-4'>
             <h1>Upper Deck</h1>
             <ListSeats seats={upperBerthSeats} updateBlockedSeats={updateBlockedSeats} />
-
           </div> : ""}
 
         <div onClick={() => {
