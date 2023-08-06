@@ -1,18 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { RootContext } from '../store/RootContext';
 import { blockSeat, getSeatLayout } from '../services/userApi';
 import ListSeats from './ListSeats';
+import { useLocation,useParams } from 'react-router-dom';
 
 function BusDetails() {
   const { rootDetails } = useContext(RootContext);
   const [busDetails, setBusDetails] = useState([]);
   const [blockedSeats, setblockedSeats] = useState([]);
 
+  //all params
+  const { id } = useParams();
+  
+  const location =useLocation();
+  const params = new URLSearchParams(location.search);
+  const inventoryType = params.get('inventoryType');
+  const sourceCity = params.get('sourceCity');
+  const destinationCity = params.get('destinationCity');
+  const doj = params.get('doj');
+  const operatorName = params.get('operatorName');
+
+
   //updating the state with seat details
   const updateBlockedSeats=({ checked, id, fare, totalFareWithTaxes, primary, ac, sleeper })=> {
-    console.log('haaa');
     if (checked) {
-      console.log('chee');
       setblockedSeats([...blockedSeats, {
         age: "26",
         name: "Arti",
@@ -44,14 +55,14 @@ function BusDetails() {
 
   //fetching the seatlayout details
   useEffect(() => {
-    getSeatLayout(rootDetails)
+    getSeatLayout({ sourceCity, destinationCity, doj, inventoryType,routeScheduleId: id})
       .then((response) => {
         setBusDetails(response.data)
       })
       .catch((err) => {
         console.log(err);
       })
-  }, [rootDetails])
+  }, [id,destinationCity,inventoryType,sourceCity,doj])
 
   //filtering the lower berth upper berth seats
   const lowerBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 0);
@@ -61,7 +72,7 @@ function BusDetails() {
   //block seat
   const handleSubmit = (e) => {
     e.preventDefault();
-    blockSeat(rootDetails, blockedSeats)
+    blockSeat({ sourceCity, destinationCity, doj, inventoryType, routeScheduleId: id }, blockedSeats)
       .then(() => {
         alert('success')
       })
@@ -73,17 +84,20 @@ function BusDetails() {
   return (
     <form onSubmit={handleSubmit} className='flex justify-center items-center'>
       <div>
+        <div>
+          <h1 className='font-bold text-center text-lg mt-8'>{operatorName}</h1>
+        </div>
         <div className='flex justify-center p-10'>
-          <h1 className='mr-5 text-lg font-semibold'>{rootDetails.sourceCity} </h1> To <h1 className='ml-5 text-lg font-semibold'>{rootDetails.destinationCity}</h1>
+          <h1 className='mr-5 text-lg font-semibold'>{sourceCity} </h1> To <h1 className='ml-5 text-lg font-semibold'>{destinationCity}</h1>
         </div>
         <div className='text-center'>
-          <p>{rootDetails.doj}</p>
+          <p>{doj}</p>
         </div>
 
         {lowerBerthSeats?.length ?
           <div className='mt-4'>
             <h1>Lower Deck</h1>
-            <ListSeats seats={lowerBerthSeats} updateBlockedSeats={updateBlockedSeats}/>
+            <ListSeats type={"lowerdeck"} seats={lowerBerthSeats} updateBlockedSeats={updateBlockedSeats}/>
           </div>
           :""}
         
@@ -91,7 +105,7 @@ function BusDetails() {
         {upperBerthSeats?.length ?
           <div className='mt-4'>
             <h1>Upper Deck</h1>
-            <ListSeats seats={upperBerthSeats} updateBlockedSeats={updateBlockedSeats} />
+            <ListSeats type={"upperdeck"} seats={upperBerthSeats} updateBlockedSeats={updateBlockedSeats} />
           </div> : ""}
 
         <div onClick={() => {

@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 function Card({ bus }) {
     const { rootDetails, setRootDetails } = useContext(RootContext);
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     return (
         <div onClick={() => {
-            setRootDetails({ ...rootDetails, inventoryType: bus.inventoryType, routeScheduleId: bus.routeScheduleId })
-            navigate('/details')
+            setRootDetails({ ...rootDetails, inventoryType: bus.inventoryType, routeScheduleId: bus.routeScheduleId, operatorName: bus.operatorName })
+            navigate(`/details/${bus.routeScheduleId}?inventoryType=${bus.inventoryType}&sourceCity=${rootDetails.sourceCity}&destinationCity=${rootDetails.destinationCity}&doj=${rootDetails.doj}&operatorName=${bus.operatorName}`)
         }} className="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer">
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{bus.operatorName}</div>
@@ -17,7 +17,7 @@ function Card({ bus }) {
                 <p>Available Seats: {bus.availableSeats}</p>
                 <p>Departure Time: {bus.departureTime}</p>
             </div>
-            
+
             <div className="grid grid-cols-2 px-6 pt-4 pb-2">
                 {
                     bus.boardingPoints.map((point, index) => {

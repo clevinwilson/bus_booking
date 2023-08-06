@@ -17,7 +17,7 @@ function LocationInput({name, initialValues, setInitialValues, cities }) {
         }, 500);
 
         return () => clearTimeout(timeOutId);
-    }, [query])
+    }, [query,cities])
 
 
     //updating the query and formik initialValues

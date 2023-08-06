@@ -6,7 +6,7 @@ function UserRouter() {
     return (
         <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/details' element={<BusDetailsPage />} />
+            <Route path='/details/:id' element={<BusDetailsPage />} />
         </Routes>
     )
 }
