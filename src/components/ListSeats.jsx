@@ -10,11 +10,11 @@ function ListSeats({ seats, updateBlockedSeats }) {
     const maxColumn = seats && Math.max(...seats.map(item => item.column));
 
     //looping through all seats based on row and column
+    for (let j = 0; j <= maxColumn; j++) {
     for (let i = 0; i <= maxRow; i++) {
-        for (let j = 0; j <= maxColumn; j++) {
             rowSeatLayout.push(<Seat row={i} column={j} seats={seats} updateBlockedSeats={updateBlockedSeats} />)
         }
-        seatLayout.push(<div className='flex'>
+        seatLayout.push(<div className='flex flex-row-reverse justify-center'>
             {rowSeatLayout}
         </div>)
         rowSeatLayout = [];

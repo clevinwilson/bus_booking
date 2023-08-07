@@ -22,7 +22,7 @@ function Seat({ row, column, seats, updateBlockedSeats }) {
                             onClick={() => {
                                 updateBlockedSeats({ checked: !seat.checked, id: seat.id, fare: seat.fare, totalFareWithTaxes: seat.totalFareWithTaxes, primary: seat.primary, ac: seat.ac, sleeper: seat.sleeper });
                             }}
-                            key={index} className="flex items-center mb-4 max-w-[100px] min-w-[100px] cursor-pointer">
+                            key={index} className="flex items-center mb-4 mx-2 min-w-[60px]  cursor-pointer">
                             {seat.checked ?
                                 <>
                                     {seat.width == 1 && seat.length == 2 ? <MdAirlineSeatIndividualSuite className="text-[40px]" /> : <MdEventSeat className="text-[40px]" />}
@@ -36,8 +36,8 @@ function Seat({ row, column, seats, updateBlockedSeats }) {
                     ))}
                 </>
                 :
-                <div className="flex items-center mb-4">
-                    <div className="max-w-[100px] min-w-[100px]"> </div>
+                <div className="flex items-center  mx-2 mb-4">
+                    <div className="min-w-[60px]"> </div>
                 </div>}
         </>
     )
