@@ -6,7 +6,7 @@ import { useLocation,useParams } from 'react-router-dom';
 
 function BusDetails() {
   const { rootDetails } = useContext(RootContext);
-  const [busDetails, setBusDetails] = useState([]);
+  const [seats, setSeat] = useState(null);
   const [blockedSeats, setblockedSeats] = useState([]);
 
   //all params
@@ -23,6 +23,16 @@ function BusDetails() {
 
   //updating the state with seat details
   const updateBlockedSeats=({ checked, id, fare, totalFareWithTaxes, primary, ac, sleeper })=> {
+
+    //updating the seat status
+    setSeat(seats.filter((seat) => {
+      if (seat.id == id) {
+        seat.checked = !seat.checked
+      }
+      return seat
+    }))
+
+    //updating the blocked seats
     if (checked) {
       setblockedSeats([...blockedSeats, {
         age: "26",
@@ -57,7 +67,8 @@ function BusDetails() {
   useEffect(() => {
     getSeatLayout({ sourceCity, destinationCity, doj, inventoryType,routeScheduleId: id})
       .then((response) => {
-        setBusDetails(response.data)
+        console.log(response.data);
+        setSeat(response.data.seats)
       })
       .catch((err) => {
         console.log(err);
@@ -65,8 +76,8 @@ function BusDetails() {
   }, [id,destinationCity,inventoryType,sourceCity,doj])
 
   //filtering the lower berth upper berth seats
-  const lowerBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 0);
-  const upperBerthSeats = busDetails.seats && busDetails.seats.filter(seat => seat.zIndex === 1);
+  const lowerBerthSeats = seats && seats.filter(seat => seat.zIndex === 0);
+  const upperBerthSeats = seats && seats.filter(seat => seat.zIndex === 1);
 
 
   //block seat
